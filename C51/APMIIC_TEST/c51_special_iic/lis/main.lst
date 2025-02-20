@@ -1,0 +1,72 @@
+C51 COMPILER V9.53.0.0   MAIN                                                              08/10/2021 11:53:32 PAGE 1   
+
+
+C51 COMPILER V9.53.0.0, COMPILATION OF MODULE MAIN
+OBJECT MODULE PLACED IN ..\output\main.obj
+COMPILER INVOKED BY: D:\Program Files\Keil_c5\C51\BIN\C51.EXE main.c OPTIMIZE(8,SPEED) BROWSE INCDIR(..\PERIPHERALS\INC\
+                    -) DEBUG OBJECTEXTEND PRINT(..\lis\main.lst) TABS(2) OBJECT(..\output\main.obj)
+
+line level    source
+
+   1          #include <reg52.h>
+   2          #include "usart.h"
+   3          #include "iic.h"  
+   4          #include "stdio.h"
+   5          /*
+   6          硬件接法：
+   7          GY-US42V1----C51
+   8          SCL---P3^6
+   9          SDA---P3^7
+  10          C51---FT232
+  11          TX ---RX
+  12          RX ---TX
+  13          软件说明：
+  14          
+  15          注：
+  16            中断函数位于stc_it.c
+  17          联系方式：
+  18          http://shop62474960.taobao.com/?spm=a230r.7195193.1997079397.2.9qa3Ky&v=1
+  19          */
+  20          char putchar (char c)   
+  21          {        
+  22   1          ES=0;        
+  23   1          SBUF = c;        
+  24   1          while(TI==0);        
+  25   1          TI=0;        
+  26   1          ES=1;        
+  27   1          return 0;
+  28   1      }
+  29          void delay(unsigned int x)
+  30          {
+  31   1        while(x--);
+  32   1      }
+  33          int main(void)
+  34          {
+  35   1      uint16_t distance=0;
+  36   1        Usart_Int(9600);
+  37   1        while(1)
+  38   1        {
+  39   2            
+  40   2            requestRange((0xa5),&distance);    //读取距离数据
+  41   2          takeRangeReading(0xa4);        //发送测量命令
+  42   2      
+  43   2            printf("distance: %d",distance);
+  44   2          delay(60000); 
+  45   2        }
+  46   1      }
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =     79    ----
+   CONSTANT SIZE    =     13    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----       2
+C51 COMPILER V9.53.0.0   MAIN                                                              08/10/2021 11:53:32 PAGE 2   
+
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)
